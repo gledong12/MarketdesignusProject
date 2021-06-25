@@ -23,8 +23,7 @@ class Car(models.Model):
 class Company_Car(models.Model):
     company = models.ForeignKey('Moving_Company_Information', on_delete=models.CASCADE, related_name='company')
     car     = models.ForeignKey('Car', on_delete=models.CASCADE, related_name='car')
-    number  = models.IntegerField()
-    
+    car_number = models.CharField(max_length=20)    
     class Meta:
         db_table = 'company_car'
         
