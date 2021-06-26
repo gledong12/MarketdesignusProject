@@ -1,9 +1,11 @@
 import json
+import re
 
 from django.http import JsonResponse
 from django.views import View
 
 from .models  import (
+                    CustomerInfomation,
                     Moving_Company_Information, 
                     Car, 
                     Company_Car, 
@@ -11,7 +13,7 @@ from .models  import (
                     Moving_type, Satisfaction, 
                     Customer_Feedback_History)
 
-class Moving_Company_Information(View):
+class MovingCompanyInformationView(View):
     def post(self, request):
         try:
             data              = request.post
@@ -20,7 +22,6 @@ class Moving_Company_Information(View):
             phone_number      = data['number']
             address           = data['address']
             business_number   = data['business_number']
-            registration_date = data['registration_date']
             staff             = data['staff']
             matching          = data.get('matching', False)
             cars              = data.getlist('car')
@@ -31,7 +32,6 @@ class Moving_Company_Information(View):
                 phone_number               = phone_number,
                 address                    = address,
                 business_number            = business_number,
-                business_registration_date = registration_date,
                 staff                      = staff,
                 matching                   = matching
             )
@@ -53,12 +53,53 @@ class Moving_Company_Information(View):
         except KeyError:
             return JsonResponse({'message' : 'INVALID_KEY'}, statue=400)
         
-class Application_of_Moving(View):
+    def get(self):
+        companys = Moving_Company_Information.objects.all()
+        result =[{
+            'name' : company.name,
+            'tel'  : company.phone_number[:-3] + company.phone_number[-3:-1].replace(company.phone_number[-3:-1],'**') + company.phone_number[-1],
+            'address' : company.address[:11],
+            'matching' : company.matching
+        } for company in companys]
+        
+        return JsonResponse({'message' : 'SUCCESS', 'result' : result}, status=200)
+
+class CustomerInformationView(View):
     def post(self, request):
         try:
             data                  = request.POST
             name                  = data['name']
             phone_number          = data['number']
+            terms_of_use          = data.get('use', False)
+            personal_information  = data.get('personal', False)
+            marketing_information = data.get('marketing', False)
+            
+            CustomerInfomation.objects.create(
+                name = name,
+                phone_number = phone_number,
+                terms_of_use = terms_of_use,
+                personal_information = personal_information,
+                marketing_information = marketing_information
+            )
+        
+            return JsonResponse({'message' : 'SUCCESS'}, status = 200)
+        except KeyError:
+            return JsonResponse({'message' : 'INVALID_KEY'}, satus=400)
+        
+    def get(self):
+        customers = CustomerInfomation.objects.all()
+        result = [{
+            'name' : customer.name,
+            'number' : customer.phone_number[:-3] + customer.phone_number[-3:-1].replace(customer.phone_number[-3:-1],'**') + customer.phone_number[-1]
+        }for customer in customers]
+    
+        return JsonResponse({'message' : 'SUCCESS', 'result': result}, status=200)
+        
+class ApplicationofMovingView(View):
+    def post(self, request):
+        try:
+            data                  = request.POST
+            name                  = data['name']
             address               = data['address']
             departure_point       = data['departure_point']
             departure_floor       = data['deaparture_floor']
@@ -67,12 +108,13 @@ class Application_of_Moving(View):
             moving_date           = data['moving_date']
             storaging_moving      = data.get('storaging_moving', False)
             terms_of_use          = data.get('terms', False)
-            personal_information  = data.get('personal', False)
-            marketing_information = data.get('marketing', False)
+
+            if not CustomerInfomation.objects.filter(name=name).exists():
+                return JsonResponse({'message' : 'DO_NOT_EXIST'}, status=400)
+            name = CustomerInfomation.objects.get(name=name).id
+            
             
             Application_of_Moving.objects.create(
-                name                  = name,
-                phone_number          = phone_number,
                 address               = address,
                 departure_point       = departure_point,
                 departure_floor       = departure_floor,
@@ -81,16 +123,29 @@ class Application_of_Moving(View):
                 moving_date           = moving_date,
                 storaging_moving      = storaging_moving,
                 terms_of_use          = terms_of_use,
-                personal_information  = personal_information,
-                marketing_information = marketing_information
+                customer_information  = name
             )
             
             return JsonResponse({'message' : 'SUCCESS'}, status=200)
         except KeyError:
             return JsonResponse({'message' : 'INVALID_KEY'}, status=200)
-    
+        
+    def get(self):
+        applications = Application_of_Moving.objects.all()
+        total_data_count = len(applications)
+        
+        result = [{
+            'name'          : application.customer_information.name,
+            'tel'           : application.customer_information.phone_number[:-3] + application.customer_information.phone_number[-3:-1].replace(application.customer_information.phone_number[-3:-1],'**') + application.customer_information.phone_number[-1],
+            'start_address' : application.departure_point[:11],
+            'end_addresses' : application.destination_point[:11],
+            'moving_date'   : application.moving_date,
+            'is_storage'    : application.storaging_moving
+        } for application in applications]
 
-class Customer_Feedback_History(View):
+        return JsonResponse({'total_data_count' : total_data_count, 'result' : result},status=200)
+    
+class CustomerFeedbackHistoryView(View):
     def post(self, request):
         try:
             data = request.POST

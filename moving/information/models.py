@@ -6,7 +6,7 @@ class Moving_Company_Information(models.Model):
     phone_number               = models.CharField(max_length=10)
     address                    = models.CharField(max_length=100)
     business_number            = models.CharField(max_length=20)
-    business_registration_date = models.DateField()
+    business_registration_date = models.DateField(auto_now_add=True)
     staff                      = models.IntegerField()
     matching                   = models.BooleanField(default=False)
     number_of_car              = models.ManyToManyField('Car', through='Company_Car', related_name='number_of_car')
@@ -23,24 +23,33 @@ class Car(models.Model):
 class Company_Car(models.Model):
     company = models.ForeignKey('Moving_Company_Information', on_delete=models.CASCADE, related_name='company')
     car     = models.ForeignKey('Car', on_delete=models.CASCADE, related_name='car')
-    car_number = models.CharField(max_length=20)    
+    
     class Meta:
         db_table = 'company_car'
         
-        
-class Application_of_Moving(models.Model):
+class CustomerInfomation(models.Model):
     name = models.CharField(max_length=45)
-    phone_number = models.CharField(max_length=50)
-    address = models.CharField(max_length=100)
-    departure_point = models.CharField(max_length=100)
-    departure_floor = models.IntegerField()
-    destination_point = models.CharField(max_length=100)
-    destination_floor = models.IntegerField()
-    moving_date = models.DateField()
-    storaging_moving = models.BooleanField(default=False)
-    terms_of_use = models.BooleanField(default=False)
-    personal_information = models.BooleanField(default=False)
+    phone_number          = models.CharField(max_length=50)
+    terms_of_use          = models.BooleanField(default=False)
+    personal_information  = models.BooleanField(default=False)
     marketing_information = models.BooleanField(default=False)
+    customer_registration_date = models.DateField(auto_now_add=True)
+    
+    class Meta:
+        db_table = 'customer_Information'
+
+
+
+class Application_of_Moving(models.Model):
+    address               = models.CharField(max_length=100)
+    departure_point       = models.CharField(max_length=100)
+    departure_floor       = models.IntegerField()
+    destination_point     = models.CharField(max_length=100)
+    destination_floor     = models.IntegerField()
+    moving_date           = models.DateField()
+    storaging_moving      = models.BooleanField(default=False)
+    customer_information  = models.ForeignKey('CustomerInformation', on_delete=models.CASCADE, related_name='customer_information')
+
     
     class Meta:
         db_table = 'application_of_moving'
@@ -63,8 +72,8 @@ class Customer_Feedback_History(models.Model):
     price                     = models.IntegerField()
     feeadback_date            = models.DateField(auto_now_add=True)
     feedback                  = models.TextField()
-    customer_information      = models.ForeignKey('Moving_Company_information', on_delete=models.CASCADE, related_name='customer_information')
-    company_information       = models.ForeignKey('Application_of_Moving', on_delete=models.CASCADE, related_name='company_information')
+    customer_information      = models.ForeignKey('Application_of_Moving', on_delete=models.CASCADE, related_name='customer_information')
+    company_information       = models.ForeignKey('Moving_Company_information', on_delete=models.CASCADE, related_name='company_information')
     moving_type               = models.ForeignKey('Moving_type', on_delete=models.CASCADE, related_name='moving_type')
     professional_satisfaction = models.ForeignKey('Satisfaction', on_delete=models.CASCADE, related_name='professional_satisfaction')
     price_satisfaction        = models.ForeignKey('Satisfaction', on_delete=models.CASCADE, related_name='price_satisfaction')
