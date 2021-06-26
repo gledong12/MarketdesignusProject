@@ -1,8 +1,6 @@
-import json
-import re
-
-from django.http import JsonResponse
-from django.views import View
+from django.http      import JsonResponse
+from django.views     import View
+from django.db.models import Q
 
 from .models  import (
                     CustomerInfomation,
@@ -16,7 +14,7 @@ from .models  import (
 class MovingCompanyInformationView(View):
     def post(self, request):
         try:
-            data              = request.post
+            data              = request.POST
             name              = data['name']
             master            = data['master']
             phone_number      = data['number']
@@ -53,12 +51,13 @@ class MovingCompanyInformationView(View):
         except KeyError:
             return JsonResponse({'message' : 'INVALID_KEY'}, statue=400)
         
-    def get(self):
+    def get(self,request):
+
         companys = Moving_Company_Information.objects.all()
         result =[{
-            'name' : company.name,
-            'tel'  : company.phone_number[:-3] + company.phone_number[-3:-1].replace(company.phone_number[-3:-1],'**') + company.phone_number[-1],
-            'address' : company.address[:11],
+            'name'     : company.name,
+            'tel'      : company.phone_number[:-3] + company.phone_number[-3:-1].replace(company.phone_number[-3:-1],'**') + company.phone_number[-1],
+            'address'  : company.address[:10],
             'matching' : company.matching
         } for company in companys]
         
@@ -74,11 +73,14 @@ class CustomerInformationView(View):
             personal_information  = data.get('personal', False)
             marketing_information = data.get('marketing', False)
             
+            if CustomerInfomation.objects.filter(Q(name=name) & Q(phone_number=phone_number)).exists():
+                return JsonResponse({'message' : 'INVALID_NAME'}, status=400)
+            
             CustomerInfomation.objects.create(
-                name = name,
-                phone_number = phone_number,
-                terms_of_use = terms_of_use,
-                personal_information = personal_information,
+                name                  = name,
+                phone_number          = phone_number,
+                terms_of_use          = terms_of_use,
+                personal_information  = personal_information,
                 marketing_information = marketing_information
             )
         
@@ -86,10 +88,10 @@ class CustomerInformationView(View):
         except KeyError:
             return JsonResponse({'message' : 'INVALID_KEY'}, satus=400)
         
-    def get(self):
+    def get(self, request):
         customers = CustomerInfomation.objects.all()
         result = [{
-            'name' : customer.name,
+            'name'   : customer.name,
             'number' : customer.phone_number[:-3] + customer.phone_number[-3:-1].replace(customer.phone_number[-3:-1],'**') + customer.phone_number[-1]
         }for customer in customers]
     
@@ -102,35 +104,33 @@ class ApplicationofMovingView(View):
             name                  = data['name']
             address               = data['address']
             departure_point       = data['departure_point']
-            departure_floor       = data['deaparture_floor']
+            departure_floor       = data['departure_floor']
             destination_point     = data['destination_point']
             destination_floor     = data['destination_floor']
             moving_date           = data['moving_date']
             storaging_moving      = data.get('storaging_moving', False)
-            terms_of_use          = data.get('terms', False)
 
             if not CustomerInfomation.objects.filter(name=name).exists():
                 return JsonResponse({'message' : 'DO_NOT_EXIST'}, status=400)
             name = CustomerInfomation.objects.get(name=name).id
-            
+            print('name', name)
             
             Application_of_Moving.objects.create(
-                address               = address,
-                departure_point       = departure_point,
-                departure_floor       = departure_floor,
-                destination_floor     = destination_floor,
-                destination_point     = destination_point,
-                moving_date           = moving_date,
-                storaging_moving      = storaging_moving,
-                terms_of_use          = terms_of_use,
-                customer_information  = name
+                address                 = address,
+                departure_point         = departure_point,
+                departure_floor         = departure_floor,
+                destination_floor       = destination_floor,
+                destination_point       = destination_point,
+                moving_date             = moving_date,
+                storaging_moving        = storaging_moving,
+                customer_information_id = name
             )
             
             return JsonResponse({'message' : 'SUCCESS'}, status=200)
         except KeyError:
-            return JsonResponse({'message' : 'INVALID_KEY'}, status=200)
+            return JsonResponse({'message' : 'INVALID_KEY'}, status=400)
         
-    def get(self):
+    def get(self, request):
         applications = Application_of_Moving.objects.all()
         total_data_count = len(applications)
         
@@ -149,7 +149,7 @@ class CustomerFeedbackHistoryView(View):
     def post(self, request):
         try:
             data = request.POST
-            opening_information = data.get('opeing', False)
+            opening_information = data.get('opening', False)
             revisit             = data.get('revisit', False)
             price               = data['price']
             feedback            = data['feedback']
@@ -157,12 +157,13 @@ class CustomerFeedbackHistoryView(View):
             company             = data['company']
             moving_type         = data['moving_type']
             professional        = data['professional']
-            price_satisfaction  = data['priec_satisfaction']
-            kindness            = data['kindess']
-            
-            if not Application_of_Moving.objects.filter(name=customer).exists():
+            price_satisfaction  = data['price_satisfaction']    
+            kindness            = data['kindness']
+           
+
+            if not CustomerInfomation.objects.filter(name=customer).exists():
                 return JsonResponse({'message' : 'INVALIED_CUSTOMER'},status = 400)
-            customer = Application_of_Moving.objects.get(name=customer).id
+            customer = CustomerInfomation.objects.get(name=customer).id
             
             if not Moving_Company_Information.objects.filter(name=company).exists():
                 return JsonResponse({'message' : 'INVALIED_COMPANY'},status = 400)
@@ -172,24 +173,25 @@ class CustomerFeedbackHistoryView(View):
                 return JsonResponse({'message' : 'INVALIED_TYPE'}, status = 400)
             moving_type = Moving_type.objects.get(name=moving_type).id
             
-            if not Satisfaction.objects.filter(name=professional, name=price_satisfaction, name=kindness).exists():
+            print('professional', professional, 'pricese', price_satisfaction, 'kind', kindness)
+            if not Satisfaction.objects.filter(Q(name=professional) | Q(name=price_satisfaction) | Q(name=kindness)).exists():
                 return JsonResponse({'message' : 'INVALIED_SATISFACTION'}, status = 400)
             
             professional       = Satisfaction.objects.get(name=professional).id
             price_satisfaction = Satisfaction.objects.get(name=price_satisfaction).id
             kindness           = Satisfaction.objects.get(name=kindness).id
-            
+            print('customer', customer, 'company', company, 'moving_type', moving_type)
             Customer_Feedback_History.objects.create(
-                opening_information=opening_information,
-                revisit                   = revisit,
-                price                     = price,
-                feedback                  = feedback,
-                customer_information      = customer,
-                company_information       = company,
-                moving_type               = moving_type,
-                professional_satisfaction = professional,
-                price_satisfaction        = price_satisfaction,
-                kindness_satisfaction     = kindness
+                opening_information          = opening_information,
+                revisit                      = revisit,
+                price                        = price,
+                feedback                     = feedback,
+                information_id               = customer,
+                company_information_id       = company,
+                moving_type_id               = moving_type,
+                professional_satisfaction_id = professional,
+                price_satisfaction_id        = price_satisfaction,
+                kindness_satisfaction_id     = kindness
             )
             
             return JsonResponse({'message' : 'SUCCESS'}, status=200)

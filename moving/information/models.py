@@ -28,17 +28,15 @@ class Company_Car(models.Model):
         db_table = 'company_car'
         
 class CustomerInfomation(models.Model):
-    name = models.CharField(max_length=45)
-    phone_number          = models.CharField(max_length=50)
-    terms_of_use          = models.BooleanField(default=False)
-    personal_information  = models.BooleanField(default=False)
-    marketing_information = models.BooleanField(default=False)
+    name                       = models.CharField(max_length=45)
+    phone_number               = models.CharField(max_length=50)
+    terms_of_use               = models.BooleanField(default=False)
+    personal_information       = models.BooleanField(default=False)
+    marketing_information      = models.BooleanField(default=False)
     customer_registration_date = models.DateField(auto_now_add=True)
     
     class Meta:
-        db_table = 'customer_Information'
-
-
+        db_table = 'customer_information'
 
 class Application_of_Moving(models.Model):
     address               = models.CharField(max_length=100)
@@ -48,7 +46,7 @@ class Application_of_Moving(models.Model):
     destination_floor     = models.IntegerField()
     moving_date           = models.DateField()
     storaging_moving      = models.BooleanField(default=False)
-    customer_information  = models.ForeignKey('CustomerInformation', on_delete=models.CASCADE, related_name='customer_information')
+    customer_information  = models.ForeignKey('CustomerInfomation', on_delete=models.CASCADE)
 
     
     class Meta:
@@ -72,7 +70,7 @@ class Customer_Feedback_History(models.Model):
     price                     = models.IntegerField()
     feeadback_date            = models.DateField(auto_now_add=True)
     feedback                  = models.TextField()
-    customer_information      = models.ForeignKey('Application_of_Moving', on_delete=models.CASCADE, related_name='customer_information')
+    information               = models.ForeignKey('Application_of_Moving', on_delete=models.CASCADE, related_name='information')
     company_information       = models.ForeignKey('Moving_Company_information', on_delete=models.CASCADE, related_name='company_information')
     moving_type               = models.ForeignKey('Moving_type', on_delete=models.CASCADE, related_name='moving_type')
     professional_satisfaction = models.ForeignKey('Satisfaction', on_delete=models.CASCADE, related_name='professional_satisfaction')
