@@ -1,11 +1,9 @@
-import my_settings
-
 from pathlib import Path
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = my_settings.SECRET_KEY
+SECRET_KEY = 'x0$(59qu#l_r&_@th9p7@4ynuu$=6r%2mf#lw9m^b_qg-g=!h+'
 
 DEBUG = True
 
@@ -53,7 +51,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'moving.wsgi.application'
 
-DATABASES = my_settings.DATABASES
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'moving',
+        'USER': 'admin',
+        'PASSWORD': 'password',
+        'HOST': 'db',
+        'PORT': '3306',
+    }
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
