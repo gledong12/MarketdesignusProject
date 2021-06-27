@@ -39,7 +39,6 @@ class CustomerInfomation(models.Model):
         db_table = 'customer_information'
 
 class Application_of_Moving(models.Model):
-    # address               = models.CharField(max_length=100)
     departure_point       = models.CharField(max_length=100)
     departure_floor       = models.IntegerField()
     destination_point     = models.CharField(max_length=100)
