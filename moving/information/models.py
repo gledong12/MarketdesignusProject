@@ -3,7 +3,7 @@ from django.db import models
 class Moving_Company_Information(models.Model):
     name                       = models.CharField(max_length=50)
     master                     = models.CharField(max_length=20)
-    phone_number               = models.CharField(max_length=10)
+    phone_number               = models.CharField(max_length=20)
     address                    = models.CharField(max_length=100)
     business_number            = models.CharField(max_length=20)
     business_registration_date = models.DateField(auto_now_add=True)
@@ -12,7 +12,7 @@ class Moving_Company_Information(models.Model):
     number_of_car              = models.ManyToManyField('Car', through='Company_Car', related_name='number_of_car')
     
     class Meta:
-        db_table = 'company_infomation'
+        db_table = 'company_information'
         
 class Car(models.Model):
     name = models.CharField(max_length=30)
@@ -39,7 +39,7 @@ class CustomerInfomation(models.Model):
         db_table = 'customer_information'
 
 class Application_of_Moving(models.Model):
-    address               = models.CharField(max_length=100)
+    # address               = models.CharField(max_length=100)
     departure_point       = models.CharField(max_length=100)
     departure_floor       = models.IntegerField()
     destination_point     = models.CharField(max_length=100)
