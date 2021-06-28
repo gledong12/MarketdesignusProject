@@ -57,7 +57,7 @@ CREATE TABLE `car` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,7 +66,7 @@ CREATE TABLE `car` (
 
 LOCK TABLES `car` WRITE;
 /*!40000 ALTER TABLE `car` DISABLE KEYS */;
-INSERT INTO `car` VALUES (1,'1t'),(2,'1t'),(3,'2.5t'),(4,'5t'),(5,'etc');
+INSERT INTO `car` VALUES (1,'1t'),(2,'2.5t'),(3,'5t'),(4,'etc');
 /*!40000 ALTER TABLE `car` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -204,7 +204,7 @@ CREATE TABLE `django_migrations` (
 
 LOCK TABLES `django_migrations` WRITE;
 /*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
-INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2021-06-27 05:45:52.578588'),(2,'contenttypes','0002_remove_content_type_name','2021-06-27 05:45:52.947576'),(3,'information','0001_initial','2021-06-27 05:45:56.853914'),(4,'sessions','0001_initial','2021-06-27 05:45:57.052001');
+INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2021-06-28 13:20:52.932066'),(2,'contenttypes','0002_remove_content_type_name','2021-06-28 13:20:53.318027'),(3,'information','0001_initial','2021-06-28 13:20:57.205225'),(4,'sessions','0001_initial','2021-06-28 13:20:57.421431');
 /*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -298,7 +298,7 @@ CREATE TABLE `moving_type` (
 
 LOCK TABLES `moving_type` WRITE;
 /*!40000 ALTER TABLE `moving_type` DISABLE KEYS */;
-INSERT INTO `moving_type` VALUES (1,'웜룸이사'),(2,'가정이사');
+INSERT INTO `moving_type` VALUES (1,'가정이사'),(2,'원룸이사');
 /*!40000 ALTER TABLE `moving_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -335,4 +335,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-06-27 17:25:33
+-- Dump completed on 2021-06-28 22:41:53

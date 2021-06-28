@@ -1,0 +1,42 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@0.3.2
+
+jobs:
+  build-and-test:
+    executor: python/default
+    docker:
+      - image: circleci/python:3.9.1
+      - image: circleci/mysql:5,7,28
+        comand: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --innodb-large-prefix=true --innodb-file-format=Barracuda
+        environment:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: test_db
+          MYSQL_USER: admin
+          MYSQL_PASSWORD: password
+
+    steps:
+      - checkout
+      - python/load-cache
+      - run:
+          name: 'Add Database Connection Environment Valiables'
+          command: |
+            echo 'export DB_NAME="test_db"' >> $BASH_ENV
+            echo 'export DB_USER="admin"' >> $BASH_ENV
+            echo 'export DB_PASSWORD="password"' >> $BASH_ENV
+            echo 'export DB_HOST="127.0.0.1"' >> $BASH_ENV
+            echo 'export DB_PORT="3306"' >> $BASH_ENV
+            echo 'export SECRET_KEY="SECRET_KEY"' >> $BASH_ENV
+      - run:
+          name: "Install Dependencies"
+          command: pip install -r requirements.txt
+      - run:
+          name: "Test"
+          command: python manage.py test .
+
+
+workflows:
+  main:
+    jobs:
+    - build-and-test

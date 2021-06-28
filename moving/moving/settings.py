@@ -3,7 +3,8 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'x0$(59qu#l_r&_@th9p7@4ynuu$=6r%2mf#lw9m^b_qg-g=!h+'
+# SECRET_KEY = 'x0$(59qu#l_r&_@th9p7@4ynuu$=6r%2mf#lw9m^b_qg-g=!h+'
+SECRET_KEY = 'SECRET_KEY'
 
 DEBUG = True
 

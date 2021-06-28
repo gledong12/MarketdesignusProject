@@ -24,6 +24,9 @@ class MovingCompanyInformationView(View):
             matching          = data.get('matching', False)
             cars              = data.getlist('car')
             
+            if Moving_Company_Information.objects.filter(name=name).exists():
+                return JsonResponse({'message' : 'INVALID_COMPANY'}, status=400)
+            
             company = Moving_Company_Information.objects.create(
                 name                       = name,
                 master                     = master,
@@ -35,18 +38,19 @@ class MovingCompanyInformationView(View):
             )
             
             company_id = company.id
-            
+
             for car in cars:
+
                 if not Car.objects.filter(name=car).exists():
                     car = Car.objects.get(name='etc')
                 
                 car = Car.objects.get(name=car)
-                
+
                 Company_Car.objects.create(
                     company_id = company_id,
                     car_id     = car.id
                 )
-                
+
             return JsonResponse({'message' : 'SUCCESS'}, status=200)
         except KeyError:
             return JsonResponse({'message' : 'INVALID_KEYS'}, status=400)
@@ -157,19 +161,20 @@ class CustomerFeedbackHistoryView(View):
             price_satisfaction  = data['price_satisfaction']    
             kindness            = data['kindness']
 
+            print(data)
             if not CustomerInfomation.objects.filter(name=customer).exists():
                 return JsonResponse({'message' : 'INVALID_CUSTOMER'},status = 400)
             customer = CustomerInfomation.objects.get(name=customer).id
-            
+           
             if not Moving_Company_Information.objects.filter(name=company).exists():
                 return JsonResponse({'message' : 'INVALID_COMPANY'},status = 400)
             company = Moving_Company_Information.objects.get(name=company).id
-            
+           
             if not Moving_type.objects.filter(name=moving_type).exists():
                 return JsonResponse({'message' : 'INVALID_TYPE'}, status = 400)
             moving_type = Moving_type.objects.get(name=moving_type).id
             
-            if not Satisfaction.objects.filter(Q(name=professional) & Q(name=price_satisfaction) & Q(name=kindness)).exists():
+            if not Satisfaction.objects.filter(Q(name__gt = professional and price_satisfaction and kindness)).exists():
                 return JsonResponse({'message' : 'INVALID_SATISFACTION'}, status = 400)
             
             professional       = Satisfaction.objects.get(name=professional).id
