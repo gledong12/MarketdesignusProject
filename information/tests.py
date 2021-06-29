@@ -333,7 +333,7 @@ class CustomerFeedbackHistoryTest(TestCase):
             'customer'            : '이동근',
             'company'             : '삼성',
             'moving_type'         : '가정이사',
-            'professional'        : '매족',
+            'professional'        : '매우족',
             'price_satisfaction'  : '매우만족',
             'kindness'            : '매우만족'
             })

@@ -161,7 +161,6 @@ class CustomerFeedbackHistoryView(View):
             price_satisfaction  = data['price_satisfaction']    
             kindness            = data['kindness']
 
-            print(data)
             if not CustomerInfomation.objects.filter(name=customer).exists():
                 return JsonResponse({'message' : 'INVALID_CUSTOMER'},status = 400)
             customer = CustomerInfomation.objects.get(name=customer).id
@@ -174,7 +173,7 @@ class CustomerFeedbackHistoryView(View):
                 return JsonResponse({'message' : 'INVALID_TYPE'}, status = 400)
             moving_type = Moving_type.objects.get(name=moving_type).id
             
-            if not Satisfaction.objects.filter(Q(name__gt = professional and price_satisfaction and kindness)).exists():
+            if not Satisfaction.objects.filter(name = professional).filter(name=price_satisfaction).filter(name=kindness).exists():
                 return JsonResponse({'message' : 'INVALID_SATISFACTION'}, status = 400)
             
             professional       = Satisfaction.objects.get(name=professional).id
