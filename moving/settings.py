@@ -1,3 +1,5 @@
+import os
+
 from pathlib import Path
 
 
@@ -51,18 +53,33 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'moving.wsgi.application'
 
-
-DATABASES = {
-'default': {
-    'ENGINE': 'django.db.backends.mysql',
-    'NAME'    : 'moving',
-    'USER'    : 'admin',
-    'PASSWORD': 'password',
-    'HOST'    : 'db',
-    'PORT'    : '3306'
-}
-}    
-
+if 'TEST' not in os.environ:
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME'    : 'moving',
+        'USER'    : 'admin',
+        'PASSWORD': 'password',
+        'HOST'    : 'db',
+        'PORT'    : '3306'
+    }
+    }    
+else:
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ["DB_NAME"],
+        'USER': os.environ["DB_USER"],
+        'PASSWORD': os.environ["DB_PASSWORD"],
+        'HOST': os.environ["DB_HOST"],
+        'PORT': os.environ["DB_PORT"],
+        'TEST': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'test.db',
+        }
+    }}
+    
+    
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
