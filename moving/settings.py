@@ -62,8 +62,7 @@ if 'TEST' not in os.environ:
         'PASSWORD': 'password',
         'HOST'    : 'db',
         'PORT'    : '3306'
-    }
-    }    
+    }}
 else:
     DATABASES = {
     'default': {
