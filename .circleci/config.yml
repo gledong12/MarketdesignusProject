@@ -5,17 +5,17 @@ orbs:
 
 jobs:
   build-and-test:
-    executor: python/default
     docker:
       - image: circleci/python:3.9.1
-      - image: circleci/mysql:5,7,28
-        comand: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --innodb-large-prefix=true --innodb-file-format=Barracuda
+      - image: circleci/mysql:5.7
+        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --innodb-large-prefix=true --innodb-file-format=Barracuda
         environment:
           MYSQL_ROOT_PASSWORD: password
           MYSQL_DATABASE: test_db
-          MYSQL_USER: admin
+          MYSQL_USER: user
           MYSQL_PASSWORD: password
-
+    
+    executor: python/default
     steps:
       - checkout
       - python/load-cache
@@ -28,11 +28,13 @@ jobs:
             echo 'export DB_HOST="127.0.0.1"' >> $BASH_ENV
             echo 'export DB_PORT="3306"' >> $BASH_ENV
             echo 'export SECRET_KEY="SECRET_KEY"' >> $BASH_ENV
+            source $BASH_ENV
+
       - run:
           name: "Install Dependencies"
           command: pip install -r requirements.txt
       - run:
-          name: "Test"
+          name: "Running Test"
           command: python manage.py test .
 
 
