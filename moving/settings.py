@@ -3,8 +3,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECRET_KEY = 'x0$(59qu#l_r&_@th9p7@4ynuu$=6r%2mf#lw9m^b_qg-g=!h+'
-SECRET_KEY = 'SECRET_KEY'
+SECRET_KEY = 'django-insecure-6p0z2a-rm1fmxb(8hh_5f!1qt)z2jh1$&q&&%6572rr)ils^yc'
 
 DEBUG = True
 
@@ -52,16 +51,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'moving.wsgi.application'
 
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'moving',
-        'USER': 'admin',
-        'PASSWORD': 'password',
-        'HOST': 'db',
-        'PORT': '3306',
-    }
+'default': {
+    'ENGINE': 'django.db.backends.mysql',
+    'NAME'    : 'moving',
+    'USER'    : 'admin',
+    'PASSWORD': 'password',
+    'HOST'    : 'db',
+    'PORT'    : '3306'
 }
+}    
 
 AUTH_PASSWORD_VALIDATORS = [
     {

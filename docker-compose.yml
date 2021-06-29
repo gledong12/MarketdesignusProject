@@ -25,6 +25,7 @@ services:
             MYSQL_USER: 'admin'
             MYSQL_DATABASE: 'moving'
             MYSQL_PASSWORD: 'password'
+            MYSQL_HOST: 'db'
         volumes: 
             - ./data:/docker-entrypoint-initdb.d
         ports: 

@@ -64,14 +64,11 @@ $ docker-compose up
 ## How to use
 url lists are as follows
 ```
- - /moving/signup
- - /api/v1/signin
- - /api/v1/subscribe
- - /api/v1/unsubscribe
- - /api/v1/mail
- - /api/v1/inbox/<int:email_id>
- - /api/v1/deleteemail
- - /api/v1/checkshipping
+ - /moving/company
+ - /moving/customer
+ - /moving/application
+ - /moving/feedback
+ 
 ```
 ## API test results in Development Server
 API test(integration test) used [POSTMAN](https://www.postman.com)<br>
