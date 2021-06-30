@@ -12,7 +12,7 @@ jobs:
         environment:
           MYSQL_ROOT_PASSWORD: password
           MYSQL_DATABASE: test_db
-          MYSQL_USER: user
+          MYSQL_USER: root
           MYSQL_PASSWORD: password
     
     executor: python/default
@@ -23,7 +23,7 @@ jobs:
           name: 'Add Database Connection Environment Valiables'
           command: |
             echo 'export DB_NAME="test_db"' >> $BASH_ENV
-            echo 'export DB_USER="user"' >> $BASH_ENV
+            echo 'export DB_USER="root"' >> $BASH_ENV
             echo 'export DB_PASSWORD="password"' >> $BASH_ENV
             echo 'export DB_HOST="127.0.0.1"' >> $BASH_ENV
             echo 'export DB_PORT="3306"' >> $BASH_ENV
