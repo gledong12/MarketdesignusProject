@@ -65,7 +65,17 @@ if 'DJANGO_DB_USERNAME' in os.environ:
         'PORT'    : os.environ['DJANGO_DB_PORT']
     }}
 else:   
-    DATABASES = my_settings.DATABASES
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'moving',
+        'USER': 'root',
+        'PASSWORD': 'shadow5424!',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+     }
+ }
+
  
 AUTH_PASSWORD_VALIDATORS = [
     {
