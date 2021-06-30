@@ -5,6 +5,13 @@ services:
         build: 
             context: .
             dockerfile: ./Dockerfile
+        environment: 
+            - DJANGO_DEBUG=True
+            - DJANGO_DB_HOST=db
+            - DJANGO_DB_PORT=3306
+            - DJANGO_DB_USERNAME=admin
+            - DJANGO_DB_PASSWORD=password
+            - DJANGO_DB_NAME=moving
         command: >
             bash -c "./wait-for-it.sh db:3306 -t 15
             && python manage.py makemigrations

@@ -68,7 +68,6 @@ url lists are as follows
  - /moving/customer
  - /moving/application
  - /moving/feedback
- 
 ```
 ## API test results in Development Server
 API test(integration test) used [POSTMAN](https://www.postman.com)<br>
@@ -76,3 +75,12 @@ The URL below is a document about integration test in develop server<br>
 Please use chrome or safari<br><br>
 [The Document about API TEST](https://documenter.getpostman.com/view/14893614/TzefC4wM)
 
+## How to use the api in Web Browser
+Try using a deployed web api !<br>
+Please check a document below for how to use the API<br><br>
+[The Document about How to use the API](https://www.notion.so/How-to-Use-API-Moving-system-e687861d01ac4db499be122c859e335e) <br>
+
+## ISSUE
+I met and solved various issues during the project<br>
+The URL below is a document about the issue in progress of the project<br><br>
+[The Document about ISSUE](https://www.notion.so/Blockers-ab2f998601bf42c69cb17ded0e2dfdff)

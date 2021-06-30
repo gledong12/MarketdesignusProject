@@ -1,4 +1,5 @@
 import os
+import my_settings
 
 from pathlib import Path
 
@@ -53,16 +54,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'moving.wsgi.application'
 
-DATABASES = {
-'default': {
-    'ENGINE': 'django.db.backends.mysql',
-    'NAME'    : 'moving',
-    'USER'    : 'root',
-    'PASSWORD': 'shadow5424!',
-    'HOST'    : '127.0.0.1',
-    'PORT'    : '3306'
-}}
-    
+if 'DJANGO_DB_USERNAME' in os.environ:
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME'    : os.environ['DJANGO_DB_NAME'],
+        'USER'    : os.environ['DJANGO_DB_USERNAME'],
+        'PASSWORD': os.environ['DJANGO_DB_PASSWORD'],
+        'HOST'    : os.environ['DJANGO_DB_HOST'],
+        'PORT'    : os.environ['DJANGO_DB_PORT']
+    }}
+else:   
+    DATABASES = my_settings.DATABASES
+ 
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
